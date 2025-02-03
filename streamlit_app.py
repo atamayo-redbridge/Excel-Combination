@@ -44,6 +44,7 @@ def main():
             all_columns = list(combined_df.columns)
             columns_to_drop = st.multiselect("Select columns to drop", all_columns)
             if columns_to_drop:
+                st.write("Dropping selected columns...")
                 combined_df = combined_df.drop(columns=columns_to_drop)
                 st.write("### Updated Data After Dropping Columns:")
                 st.dataframe(combined_df.head(10))  # Show preview after dropping columns
@@ -51,6 +52,7 @@ def main():
         # Language translation option
         language = st.selectbox("Translate column headers to:", ["None", "English", "Spanish"])
         if language != "None":
+            st.write(f"Translating column headers to {language}...")
             lang_code = "en" if language == "English" else "es"
             combined_df = translate_dataframe(combined_df, lang_code)
             st.write(f"### Translated Data Preview ({language}):")
