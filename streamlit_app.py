@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from io import BytesIO
+from deep_translator import GoogleTranslator
 
 def combine_excel_files(uploaded_files):
     """Function to combine multiple Excel files into one while ensuring all columns are present."""
@@ -11,6 +12,12 @@ def combine_excel_files(uploaded_files):
         combined_df = pd.concat([combined_df, df], ignore_index=True, sort=False)
     
     return combined_df
+
+def translate_dataframe(df, target_language):
+    """Translate column headers to the target language."""
+    translator = GoogleTranslator(source='auto', target=target_language)
+    df.columns = [translator.translate(col) for col in df.columns]
+    return df
 
 def convert_df_to_excel(df):
     """Convert DataFrame to Excel format for download."""
@@ -40,6 +47,14 @@ def main():
                 combined_df = combined_df.drop(columns=columns_to_drop)
                 st.write("### Updated Data After Dropping Columns:")
                 st.dataframe(combined_df.head(10))  # Show preview after dropping columns
+        
+        # Language translation option
+        language = st.selectbox("Translate column headers to:", ["None", "English", "Spanish"])
+        if language != "None":
+            lang_code = "en" if language == "English" else "es"
+            combined_df = translate_dataframe(combined_df, lang_code)
+            st.write(f"### Translated Data Preview ({language}):")
+            st.dataframe(combined_df.head(10))
         
         excel_data = convert_df_to_excel(combined_df)
         st.download_button(label="Download Combined Excel", data=excel_data, file_name="Combined_Data.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
