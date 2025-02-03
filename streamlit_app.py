@@ -46,6 +46,7 @@ def main():
             if columns_to_drop:
                 st.write("Dropping selected columns...")
                 combined_df = combined_df.drop(columns=columns_to_drop)
+                st.success("Columns Dropped Successfully!")
                 st.write("### Updated Data After Dropping Columns:")
                 st.dataframe(combined_df.head(10))  # Show preview after dropping columns
         
@@ -55,6 +56,7 @@ def main():
             st.write(f"Translating column headers to {language}...")
             lang_code = "en" if language == "English" else "es"
             combined_df = translate_dataframe(combined_df, lang_code)
+            st.success("Translation Completed Successfully!")
             st.write(f"### Translated Data Preview ({language}):")
             st.dataframe(combined_df.head(10))
         
